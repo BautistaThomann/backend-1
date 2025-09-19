@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "title": "Remera",
+        "description": "Remera talle M manga corta de color negro.",
+        "code": "REM001",
+        "price": 120,
+        "status": true,
+        "stock": 10,
+        "category": "Ropa",
+        "thumbnails": [
+            "img/remera1.png"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Zapatillas",
+        "description": "Zapatillas deportivas color blanco.",
+        "code": "ZAP001",
+        "price": 250,
+        "status": true,
+        "stock": 5,
+        "category": "Calzado",
+        "thumbnails": [
+            "img/zapatillas1.png"
+        ]
+    }
+]
