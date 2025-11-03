@@ -24,5 +24,18 @@
     "thumbnails": [
       "-"
     ]
+  },
+  {
+    "id": 5,
+    "title": "Remera2",
+    "description": "remera de muy buena calidad",
+    "code": "111111",
+    "price": 2000,
+    "status": true,
+    "stock": 1,
+    "category": "remeras",
+    "thumbnails": [
+      "-"
+    ]
   }
 ]

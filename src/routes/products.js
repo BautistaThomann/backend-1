@@ -1,43 +1,55 @@
 const express = require("express");
-const ProductManager = require("../managers/ProductManager");
+const ProductModel = require("../dao/models/product.model");
 const router = express.Router();
 
-const productManager = new ProductManager();
-
-// GET todos los productos
+// GET con paginación, filtros y orden
 router.get("/", async (req, res) => {
-    const products = await productManager.getProducts();
-    res.json(products);
-});
+    try {
+        const { limit = 10, page = 1, sort, query } = req.query;
 
-// GET producto por id
-router.get("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
-    const product = await productManager.getProductById(pid);
-    if (!product) return res.status(404).json({ error: "producto no encontrado" });
-    res.json(product);
-});
+        let filter = {};
+        if (query) {
+            filter = {
+                $or: [
+                    { category: query },
+                    { status: query === "true" },
+                ],
+            };
+        }
 
-// POST crear producto
-router.post("/", async (req, res) => {
-    const newProduct = await productManager.addProduct(req.body);
-    res.status(201).json(newProduct);
-});
+        let sortOption = {};
+        if (sort === "asc") sortOption = { price: 1 };
+        if (sort === "desc") sortOption = { price: -1 };
 
-// PUT actualizar producto
-router.put("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
-    const updatedProduct = await productManager.updateProduct(pid, req.body);
-    if (!updatedProduct) return res.status(404).json({ error: "producto no encontrado" });
-    res.json(updatedProduct);
-});
+        const options = {
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: sortOption,
+            lean: true,
+        };
 
-// DELETE eliminar producto
-router.delete("/:pid", async (req, res) => {
-    const pid = parseInt(req.params.pid);
-    const deleted = await productManager.deleteProduct(pid);
-    if (!deleted) return res.status(404).json({ error: "producto no encontrado" });
-    res.json({ message: "producto eliminado correctamente" });
+        const result = await ProductModel.paginate(filter, options);
+
+        res.json({
+            status: "success",
+            payload: result.docs,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage
+                ? `/api/products?page=${result.prevPage}`
+                : null,
+            nextLink: result.hasNextPage
+                ? `/api/products?page=${result.nextPage}`
+                : null,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: "error", message: "Error al obtener productos" });
+    }
 });
 
 module.exports = router;

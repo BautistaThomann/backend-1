@@ -1,3 +1,12 @@
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/ecommerce")
+    .then(() => console.log("Conectado a MongoDB"))
+    .catch(err => console.error("Error al conectar con MongoDB:", err));
+
+
+
+
 const express = require("express");
 const { Server } = require("socket.io");
 const handlebars = require("express-handlebars");
@@ -58,3 +67,20 @@ io.on("connection", (socket) => {
         io.emit("productsUpdated", updatedProducts);
     });
 });
+
+
+
+// 1️) instalar dependencias:
+//    npm install
+//
+// 2) levantar el servidor:
+//    npm start
+//
+// 3) rutas principales:
+//    http://localhost:8080/home
+//    http://localhost:8080/realtimeproducts
+//
+//
+// el servidor se inicia desde src/app.js
+// 
+
